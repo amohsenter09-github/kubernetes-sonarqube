@@ -1,0 +1,30 @@
+prerequisites
+1- Kubernetes cluster for example eks, Azure, GCE and etc
+2- Postgres DB 
+
+Deployment instruction
+
+A) Deploy volume resources both Persistent volume and the claimer 
+
+Kubectl create -f  sonar-pv-postgres.yml
+Kubectl create -f  sonar-pvc-postgres.yml
+
+This is the Postgres persistent volume that abstracts away the persistent storage.
+They have a lifecycle that is independent of the Pod and/or Deployment resources and are thus not impacted by their health.
+
+
+B) Deploy password secret for external connection to Postgres DB
+kubectl create secret generic postgres-pwd --from-literal=password='yourpassword'
+
+D) Deploy sonarqube appliction and the postgres DB 
+
+kubectl create -f sonar-postgres-deployment.yml
+kubectl create -f sonarqube-deployment.yml
+
+
+E) Deploy node service to expose sonarqube application externally 
+
+kubectl create -f sonarqube-service.yml
+kubectl create -f sonar-postgres-service.yml
+
+
